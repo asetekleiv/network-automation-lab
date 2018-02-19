@@ -1,5 +1,5 @@
 # network-automation-lab
-Network automation lab consisting  of 3 CSR1000v routers<br>
+Network automation lab consisting  of 3 CSR1000v routers and 1 FW<br>
 <br>
 Current status of lab:<br>
 Router 1: 1 managment interface, 2 interfaces connecting to a shared subnet to Router 2 and 3<br>
