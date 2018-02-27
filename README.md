@@ -9,7 +9,6 @@
 <li>Vmware ESXi</li>
 </ul>
 
-<br>
 Current status of lab:
 <ul>
 <li>Router 1: 1 managment interface, 1 interface connecting to shared subnet, 1 free interface not used</li>
