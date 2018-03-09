@@ -1,0 +1,61 @@
+---
+##################################################
+- name: show version and other user level commands
+##################################################
+  hosts: ios
+  gather_facts: false
+  vars:
+    output: printouts
+  vars_files:
+    - ~/secure/passwords
+    - "./{{ansible_device_os}}/commands.yml"
+  connection: local
+ 
+  tasks:
+  - name: run multiple commands on remote nodes
+    ios_command:
+      commands:
+        - show ip int brief
+        - "{{show_arp}}"
+        - sh capability feature routing 
+
+    register: show
+# - debug: var=show.stdout_lines
+  
+  #Save files to directory "printouts" with "hostname.report.txt"
+  - local_action: file path={{output}} state=directory
+  - local_action: copy content={{show.stdout}} dest={{output}}/{{inventory_hostname}}.report.txt  
+
+#################################################
+- name: GET snmp interface facts printed to JSON
+#################################################
+  hosts: ios
+  gather_facts: false
+  vars:
+    - output: printouts
+
+  vars_files:
+    - ~/secure/passwords
+    - "./{{ansible_device_os}}/commands.yml"
+  connection: local
+ 
+  tasks:
+  - snmp_facts:
+      host: "{{ansible_host}}"
+      version: v2
+      community: "{{snmp_community}}"
+    register: snmpresult
+  - debug: var=snmpresult.ansible_facts
+  #Save files to directory "printouts" with "hostname.snmpreport.json"
+  - local_action: file path={{output}} state=directory
+  - local_action: copy content={{snmpresult.ansible_facts.ansible_interfaces | to_nice_json}} dest={{output}}/{{inventory_hostname}}.snmpreport.json 
+  
+
+
+
+
+
+
+
+
+ 
