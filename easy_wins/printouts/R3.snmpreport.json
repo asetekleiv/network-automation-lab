@@ -1,0 +1,80 @@
+{
+    "1": {
+        "adminstatus": "up",
+        "description": "",
+        "ifindex": "1",
+        "ipv4": [
+            {
+                "address": "192.168.21.233",
+                "netmask": "255.255.255.0"
+            }
+        ],
+        "mac": "000c29c59a8f",
+        "mtu": "1500",
+        "name": "GigabitEthernet1",
+        "operstatus": "up",
+        "speed": "1500"
+    },
+    "2": {
+        "adminstatus": "up",
+        "description": "",
+        "ifindex": "2",
+        "ipv4": [
+            {
+                "address": "10.0.1.3",
+                "netmask": "255.255.255.0"
+            }
+        ],
+        "mac": "000c29c59a99",
+        "mtu": "1500",
+        "name": "GigabitEthernet2",
+        "operstatus": "up",
+        "speed": "1500"
+    },
+    "3": {
+        "adminstatus": "down",
+        "description": "",
+        "ifindex": "3",
+        "mac": "000c29c59aa3",
+        "mtu": "1500",
+        "name": "GigabitEthernet3",
+        "operstatus": "down",
+        "speed": "1500"
+    },
+    "4": {
+        "adminstatus": "up",
+        "description": "",
+        "ifindex": "4",
+        "mac": "",
+        "mtu": "1500",
+        "name": "VoIP-Null0",
+        "operstatus": "up",
+        "speed": "1500"
+    },
+    "5": {
+        "adminstatus": "up",
+        "description": "",
+        "ifindex": "5",
+        "mac": "",
+        "mtu": "1500",
+        "name": "Null0",
+        "operstatus": "up",
+        "speed": "1500"
+    },
+    "6": {
+        "adminstatus": "up",
+        "description": "",
+        "ifindex": "6",
+        "ipv4": [
+            {
+                "address": "10.0.10.3",
+                "netmask": "255.255.255.255"
+            }
+        ],
+        "mac": "",
+        "mtu": "1514",
+        "name": "Loopback0",
+        "operstatus": "up",
+        "speed": "1514"
+    }
+}
