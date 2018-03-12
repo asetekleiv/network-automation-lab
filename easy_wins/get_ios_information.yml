@@ -1,6 +1,6 @@
 ---
 ##################################################
-- name: File and directoy changes on localhost 
+- name: File and directory changes on localhost 
 ##################################################
   hosts: localhost
   connection: local
