@@ -1,0 +1,7 @@
+[ios]
+R1 ansible_host=192.168.21.231
+R2 ansible_host=192.168.21.232
+R3 ansible_host=192.168.21.233
+
+[ios:vars]
+ansible_device_os=ios
