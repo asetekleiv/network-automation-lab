@@ -1,0 +1,2 @@
+#!/bin/bash 
+ansible-playbook get_ios_facts_and_snmp.yml

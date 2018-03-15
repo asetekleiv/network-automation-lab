@@ -1,0 +1,26 @@
+---
+##################################################
+- name: File and directory changes on localhost 
+##################################################
+  hosts: localhost
+  connection: local
+  vars:
+    results: results
+  tasks: 
+  #Create results directory if not existing
+  - include_tasks: create_{{results}}_dir.yml
+
+######################################################
+- name: Gather IOS facts from snmp_facts and ios_facts
+######################################################
+  hosts: ios
+  vars:
+    results: results
+  vars_files:
+    - ~/secure/passwords  
+  connection: local
+ 
+  tasks:
+  - include_tasks: "read-device.yml"
+  - name: Save output in files  
+    local_action: copy content={{hostvars[inventory_hostname]|to_nice_yaml(indent=4)}} dest={{results}}/{{inventory_hostname}}.yml

@@ -1,0 +1,9 @@
+---
+ansible_device_os: ios
+snmp_community: 'cisco'
+
+cli:
+  username: "{{ansible_user}}"
+  password: "{{ansible_password}}"
+  host: "{{ansible_host|default(inventory_hostname)}}"
+  transport: cli

@@ -1,0 +1,6 @@
+---
+- snmp_facts:
+    host: "{{ansible_host}}"
+    version: v2
+    community: "{{snmp_community}}"
+- ios_facts:

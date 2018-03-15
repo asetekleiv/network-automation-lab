@@ -1,0 +1,186 @@
+ansible_all_ipv4_addresses:
+- 10.0.1.2
+- 10.0.10.2
+- 192.168.21.232
+ansible_check_mode: false
+ansible_device_os: ios
+ansible_host: 192.168.21.232
+ansible_interfaces:
+    '1':
+        adminstatus: up
+        description: ''
+        ifindex: '1'
+        ipv4:
+        -   address: 192.168.21.232
+            netmask: 255.255.255.0
+        mac: 000c29f0fdf9
+        mtu: '1500'
+        name: GigabitEthernet1
+        operstatus: up
+        speed: '1500'
+    '2':
+        adminstatus: up
+        description: ''
+        ifindex: '2'
+        ipv4:
+        -   address: 10.0.1.2
+            netmask: 255.255.255.0
+        mac: 000c29f0fd03
+        mtu: '1500'
+        name: GigabitEthernet2
+        operstatus: up
+        speed: '1500'
+    '3':
+        adminstatus: down
+        description: ''
+        ifindex: '3'
+        mac: 000c29f0fd0d
+        mtu: '1500'
+        name: GigabitEthernet3
+        operstatus: down
+        speed: '1500'
+    '4':
+        adminstatus: up
+        description: ''
+        ifindex: '4'
+        mac: ''
+        mtu: '1500'
+        name: VoIP-Null0
+        operstatus: up
+        speed: '1500'
+    '5':
+        adminstatus: up
+        description: ''
+        ifindex: '5'
+        mac: ''
+        mtu: '1500'
+        name: Null0
+        operstatus: up
+        speed: '1500'
+    '6':
+        adminstatus: up
+        description: ''
+        ifindex: '6'
+        ipv4:
+        -   address: 10.0.10.2
+            netmask: 255.255.255.255
+        mac: ''
+        mtu: '1514'
+        name: Loopback0
+        operstatus: up
+        speed: '1514'
+ansible_net_all_ipv4_addresses:
+- 10.0.1.2
+- 10.0.10.2
+- 192.168.21.232
+ansible_net_all_ipv6_addresses: []
+ansible_net_filesystems:
+- 'bootflash:'
+ansible_net_gather_subset:
+- hardware
+- interfaces
+- default
+ansible_net_hostname: CSR02
+ansible_net_image: bootflash:packages.conf
+ansible_net_interfaces:
+    GigabitEthernet1:
+        bandwidth: 1000000
+        description: null
+        duplex: Full
+        ipv4:
+        -   address: 192.168.21.232
+            subnet: '24'
+        lineprotocol: 'up '
+        macaddress: 000c.29f0.fdf9
+        mediatype: RJ45
+        mtu: 1500
+        operstatus: up
+        type: CSR vNIC
+    GigabitEthernet2:
+        bandwidth: 1000000
+        description: null
+        duplex: Full
+        ipv4:
+        -   address: 10.0.1.2
+            subnet: '24'
+        lineprotocol: 'up '
+        macaddress: 000c.29f0.fd03
+        mediatype: RJ45
+        mtu: 1500
+        operstatus: up
+        type: CSR vNIC
+    GigabitEthernet3:
+        bandwidth: 1000000
+        description: null
+        duplex: Full
+        ipv4: []
+        lineprotocol: 'down '
+        macaddress: 000c.29f0.fd0d
+        mediatype: RJ45
+        mtu: 1500
+        operstatus: administratively down
+        type: CSR vNIC
+    Loopback0:
+        bandwidth: 8000000
+        description: null
+        duplex: null
+        ipv4:
+        -   address: 10.0.10.2
+            subnet: '32'
+        lineprotocol: 'up '
+        macaddress: 10.0.10.2/32
+        mediatype: null
+        mtu: 1514
+        operstatus: up
+        type: null
+ansible_net_memfree_mb: 1854537.71875
+ansible_net_memtotal_mb: 2188270.5234375
+ansible_net_model: null
+ansible_net_neighbors:
+    'null':
+    -   host: null
+        port: null
+ansible_net_serialnum: 93GVRL4L6V6
+ansible_net_version: 16.07.01
+ansible_playbook_python: /home/jalla/pythonvenv3/bin/python3
+ansible_port: 22
+ansible_python_interpreter: /usr/bin/env python
+ansible_syscontact: ''
+ansible_sysdescr: "Cisco IOS Software [Fuji], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M),\
+    \ Version 16.7.1, RELEASE SOFTWARE (fc6)\r\nTechnical Support: http://www.cisco.com/techsupport\r\
+    \nCopyright (c) 1986-2017 by Cisco Systems, Inc.\r\nCompiled Mon 20-Nov-17 18:57\
+    \ by "
+ansible_syslocation: ''
+ansible_sysname: CSR02.hjemmenett
+ansible_sysobjectid: 1.3.6.1.4.1.9.1.1537
+ansible_sysuptime: '15496849'
+ansible_version:
+    full: 2.4.3.0
+    major: 2
+    minor: 4
+    revision: 3
+    string: 2.4.3.0
+cli:
+    host: 192.168.21.232
+    password: '{{ansible_password}}'
+    transport: cli
+    username: '{{ansible_user}}'
+group_names:
+- ios
+groups:
+    all:
+    - R1
+    - R2
+    - R3
+    ios:
+    - R1
+    - R2
+    - R3
+    ungrouped: []
+inventory_dir: /home/jalla/repogithub/network-automation-lab/ansible_test/iosfacts
+inventory_file: /home/jalla/repogithub/network-automation-lab/ansible_test/iosfacts/hosts
+inventory_hostname: R2
+inventory_hostname_short: R2
+omit: __omit_place_holder__06c46cb66b1ebe2b6fed82dd947cf2f63757ff4b
+playbook_dir: /home/jalla/repogithub/network-automation-lab/ansible_test/iosfacts
+snmp_community: cisco

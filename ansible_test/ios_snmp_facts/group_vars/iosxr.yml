@@ -1,3 +1,4 @@
 ---
-ansible_device_os: ios
+ansible_device_os: iosxr
 snmp_community: 'cisco'
+

@@ -1,0 +1,30 @@
+---
+##################################################
+- name: File and directory changes on localhost 
+##################################################
+  hosts: localhost
+  connection: local
+  vars:
+    results: results
+  tasks: 
+  #Create results directory if not existing
+  - include_tasks: create_{{results}}_dir.yml
+
+######################################################
+- name: Read data and create report
+######################################################
+  hosts: all
+  vars:
+    results: "{{inventory_dir}}/results"
+  vars_files:
+    - ~/secure/passwords  
+  #connection: local
+  
+  tasks:
+  
+  #Read snmp_facts and ios_factes
+  - include_tasks: "uptime/read-{{src|default('device')}}.yml"
+  #Report uptime to text file
+  - include_tasks: "uptime/report-{{dst|default('text')}}.yml"
+
+    

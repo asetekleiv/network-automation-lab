@@ -1,0 +1,10 @@
+---
+#- file: path="{{results}}/uptime.log" state=absent
+#  run_once: true
+#- file: path="{{results}}/uptime.log" state=touch 
+#  run_once: true
+
+- template: src="uptime-text.j2" dest="{{results}}/uptime.log"
+  vars:
+    allhosts: "{{hostvars}}"
+  run_once: true
