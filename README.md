@@ -9,14 +9,6 @@
 <li>Vmware ESXi</li>
 </ul>
 
-Current status of lab:
-<ul>
-<li>Router 1: 1 managment interface, 1 interface connecting to shared subnet, 1 free interface not used</li>
-<li>Router 2: 1 managment interface, 1 interface connecting to shared subnet, 1 free interface not used</li>
-<li>Router 3: 1 managment interface, 1 interface connecting to shared subnet, 1 free interface not used</li>
-<li>Firewall 1: Cisco ASA firewall, 1 mgmt interface, 1 interface connecting to shared subnet, several free interfaces to be used</li>
-</ul>
-
 Future plans:
 <ul>
 <li>Automate setup with Vagrant, currently manual setup in ESXi</li>
