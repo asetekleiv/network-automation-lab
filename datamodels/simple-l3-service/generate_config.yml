@@ -3,7 +3,7 @@
 - name: Transform fabric data model
 ###################################
   tags:
-    - facric2node
+    - fabric2node
   hosts: localhost
   gather_facts: no
   tasks:

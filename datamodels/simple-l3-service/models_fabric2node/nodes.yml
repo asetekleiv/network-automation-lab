@@ -18,7 +18,7 @@ routers:
       - GigabitEthernet2.200: { ip: 172.16.2.2/30, dot1q: 200, area: 0, neighbour: P-1  }
 
     service:
-      - {'vrf': 1001, 'PE-2': 'second', 'type': 'l3vpn', 'PE-1': 'first'}
+      - {'PE-2': 'second', 'PE-1': 'first', 'type': 'l3vpn', 'vrf': 1001}
   
  
   PE-2:
@@ -33,7 +33,7 @@ routers:
       - GigabitEthernet3.1001: { ip: 192.168.2.1/30, dot1q: 1001, area: NA, neighbour: CE-2  }
 
     service:
-      - {'vrf': 1001, 'PE-2': 'second', 'type': 'l3vpn', 'PE-1': 'first'}
+      - {'PE-2': 'second', 'PE-1': 'first', 'type': 'l3vpn', 'vrf': 1001}
   
  
   P-1:

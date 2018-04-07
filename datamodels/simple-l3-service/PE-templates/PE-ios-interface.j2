@@ -11,6 +11,9 @@ interface Loopback0
   interface {{key}}
   description to-{{value.neighbour}}
   encapsulation dot1Q {{value.dot1q}}
+{% if 'CE' in value.neighbour %}
+  ip vrf forwarding {{value.dot1q}}
+{% endif %}
   ip address {{value.ip | ipaddr('address')}} {{value.ip | ipaddr('netmask')}}
 {%      if "P" in value.neighbour %}
   ip ospf {{router.ospf_process}} area {{value.area}}
