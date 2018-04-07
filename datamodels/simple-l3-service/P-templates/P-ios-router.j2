@@ -1,0 +1,11 @@
+{% set router = routers[inventory_hostname] %}
+!
+{% if router.ospf_process is defined %}
+router ospf {{router.ospf_process}}
+ router-id {{router.system}}
+ redistribute connected subnets
+{% endif -%}
+!
+mpls ldp router-id Loopback0
+!
+ip bgp-community new-format

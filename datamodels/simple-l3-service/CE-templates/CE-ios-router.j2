@@ -1,0 +1,12 @@
+{% set router = routers[inventory_hostname] %}
+!
+{%  for links in router.links -%}
+{% for key, value in links.items()%}
+ip route 0.0.0.0 0.0.0.0 
+{{key}}
+{{value.ip | ipaddr('1') }}
+{% endfor %}
+{% endfor %}
+
+
+

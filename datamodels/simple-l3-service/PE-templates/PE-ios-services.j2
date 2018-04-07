@@ -1,0 +1,24 @@
+{% set router = routers[inventory_hostname] %}
+{% set router_bgpneighbor = routers[inventory_hostname]['bgpneighbor'] %}
+{% set router_bgpneighbor_system = routers[router_bgpneighbor]['system'] %}
+
+!
+{% if router.service is defined %}
+{% for info in router.service %}
+
+ip vrf {{info.vrf}}
+ rd {{common_attr.asn}}:{{info.vrf}}
+ route-target export {{common_attr.asn}}:{{info.vrf}}
+ route-target import {{common_attr.asn}}:{{info.vrf}}
+!
+ address-family vpnv4
+  neighbor {{router_bgpneighbor_system}} activate
+  neighbor {{router_bgpneighbor_system}} send-community extended
+ exit-address-family
+ !
+ address-family ipv4 vrf {{info.vrf}}
+  redistribute connected
+ exit-address-family
+!
+{% endfor %}
+{% endif %}

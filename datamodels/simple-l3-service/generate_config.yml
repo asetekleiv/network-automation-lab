@@ -1,0 +1,77 @@
+---
+###################################
+- name: Transform fabric data model
+###################################
+  tags:
+    - facric2node
+  hosts: localhost
+  gather_facts: no
+  tasks:
+  - include_vars:
+      file: ./models_fabric2node/fabric.yml
+  - name: Create per-node data model from fabric data model
+    template: src=./models_fabric2node/fabric2nodes.j2 dest=./models_fabric2node/nodes.yml
+
+#####################################
+- name: Generate  configs for PE
+#####################################
+  tags:
+    - config-pe
+  hosts: ios-pe
+  connection: local
+  gather_facts: no
+  tasks:
+  - include_vars:
+        file: ./models_fabric2node/nodes.yml
+   
+  - name: Create general config snippet for PE
+    template: src=./PE-templates/PE-ios-general.j2  dest=./generated_config/{{inventory_hostname}}.PE-ios-general.cfg
+
+  - name: Create interface config snippet for PE
+    template: src=./PE-templates/PE-ios-interface.j2 dest=./generated_config/{{inventory_hostname}}.PE-ios-interface.cfg
+
+  - name: Create router config snippet for PE
+    template: src=./PE-templates/PE-ios-router.j2 dest=./generated_config/{{inventory_hostname}}.PE-ios-router.cfg
+
+  - name: Create services config snippet for PE
+    template: src=./PE-templates/PE-ios-services.j2 dest=./generated_config/{{inventory_hostname}}.PE-ios-services.cfg
+
+#####################################
+- name: Generate  configs for P
+#####################################
+  tags:
+    - config-p
+  hosts: ios-p
+  connection: local
+  gather_facts: no
+  tasks:
+  - include_vars:
+        file: ./models_fabric2node/nodes.yml
+  - name: Create general config snippet for P
+    template: src=./P-templates/P-ios-general.j2  dest=./generated_config/{{inventory_hostname}}.P-ios-general.cfg
+
+  - name: Create interface config snippet for P
+    template: src=./P-templates/P-ios-interface.j2 dest=./generated_config/{{inventory_hostname}}.P-ios-interface.cfg
+
+  - name: Create router config snippet for P
+    template: src=./P-templates/P-ios-router.j2 dest=./generated_config/{{inventory_hostname}}.P-ios-router.cfg
+  
+#####################################
+- name: Generate  configs for CE
+#####################################
+  tags:
+    - config-ce
+  hosts: ios-ce
+  connection: local
+  gather_facts: no
+  tasks:
+  - include_vars:
+        file: ./models_fabric2node/nodes.yml
+  - name: Create general config snippet for CE
+    template: src=./CE-templates/CE-ios-general.j2  dest=./generated_config/{{inventory_hostname}}.CE-ios-general.cfg
+
+  - name: Create interface config snippet for CE
+    template: src=./CE-templates/CE-ios-interface.j2 dest=./generated_config/{{inventory_hostname}}.CE-ios-interface.cfg
+
+  - name: Create router config snippet for CE
+    template: src=./CE-templates/CE-ios-router.j2 dest=./generated_config/{{inventory_hostname}}.CE-ios-router.cfg 

@@ -1,0 +1,22 @@
+{% set router = routers[inventory_hostname] %}
+!
+{% if router.links is defined -%}
+{%  for links in router.links -%}
+{%    for key, value in links.items() -%}
+  interface {{key}}
+  description to-{{value.neighbour}}
+  encapsulation dot1Q {{value.dot1q}}
+  ip address {{value.ip | ipaddr('address')}} {{value.ip | ipaddr('netmask')}}
+!  
+{%    endfor -%}
+{%  endfor -%}
+{% endif -%}  
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,22 @@
+{% set router = routers[inventory_hostname] %}
+{% set router_bgpneighbor = routers[inventory_hostname]['bgpneighbor'] %}
+{% set router_bgpneighbor_system = routers[router_bgpneighbor]['system'] %}
+!
+{% if router.ospf_process is defined %}
+router ospf {{router.ospf_process}}
+ router-id {{router.system}}
+ redistribute connected subnets
+{% endif -%}
+!
+router bgp {{common_attr.asn}}
+ bgp router-id {{router.system}}
+ bgp log-neighbor-changes
+ neighbor {{router_bgpneighbor_system }} remote-as {{common_attr.asn}}
+ neighbor {{ router_bgpneighbor_system }}  update-source Loopback0
+! 
+ address-family ipv4
+ neighbor {{ router_bgpneighbor_system }} activate
+!
+mpls ldp router-id Loopback0
+!
+ip bgp-community new-format

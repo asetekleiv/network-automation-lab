@@ -1,0 +1,49 @@
+---
+common_attr:
+  asn: 65535
+  md5_key: test
+
+routers:
+  - name: PE-1
+    system: 10.0.10.1
+    os: ios
+    bgpneighbor: PE-2
+  - name: PE-2
+    system: 10.0.10.2
+    os: ios
+    bgpneighbor: PE-1
+  - name: P-1
+    system: 10.0.10.10
+    os: ios 
+    bgpneighbor: NA
+  - name: CE-1
+    system: NA
+    os: ios  
+    bgpneighbor: NA
+  - name: CE-2
+    system: NA
+    os: ios
+    bgpneighbor: NA
+  
+  
+fabric_links:
+  #Link between PE-1 and CE-1
+  - {second_router: CE-1, second_port: GigabitEthernet3, 
+    first_router: PE-1, first_port: GigabitEthernet3,
+  dot1q: 1001, subnet: 192.168.1.0/30, ospf_area: NA }
+  #Link between P-1 and PE-1 
+  - {second_router: PE-1, second_port: GigabitEthernet2, 
+    first_router: P-1, first_port: GigabitEthernet2,
+  dot1q: 200, subnet: 172.16.2.0/30, ospf_area: 0 }
+  #Link between P-1 and PE-2  
+  - {first_router: P-1,  first_port: GigabitEthernet3, 
+    second_router: PE-2, second_port: GigabitEthernet2,
+  dot1q: 300, subnet: 172.16.2.0/30, ospf_area: 0  }
+  #Link between PE-2 and CE-2 
+  - {first_router: PE-2, first_port: GigabitEthernet3, 
+    second_router: CE-2, second_port: GigabitEthernet3,
+  dot1q: 1001, subnet: 192.168.2.0/30, ospf_area: NA }
+
+service_fabric:
+  #L3 VPN between PE-1 and PE-2
+  - { vrf: 1001, PE-1: first, PE-2: second, type: l3vpn }
