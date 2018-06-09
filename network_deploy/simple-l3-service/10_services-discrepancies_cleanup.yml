@@ -1,28 +1,4 @@
 ---
-#####################################    
-- name: Test services after deployment
-#####################################    
-  hosts: ios-pe
-  tags:
-    - test-service-pe
-  gather_facts: false
-  connection: local
-  vars_files:
-    - ~/secure/passwords
-  tasks:
-    - pause:
-        seconds: 2
-    - block:
-      - name: "validate deployment"
-        napalm_validate:
-          hostname: "{{ ansible_host }}"
-          username: "{{ ansible_ssh_user }}"
-          dev_os: "{{ ansible_device_os }}"
-          password: "{{ ansible_ssh_pass }}"
-          validation_file: "./validate_services/{{ inventory_hostname }}_validate_services.yml"
-        register: report
-        tags: [print_action]
-
 #####################################
 - name: Report service discrepancies - VRFs configured on PE that are not listed as active_vrf
 #####################################
