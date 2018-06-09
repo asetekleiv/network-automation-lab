@@ -1,0 +1,44 @@
+---
+
+#####################################    
+- name: Generate predeployment check for PE services - interfaces in active service
+#####################################
+  tags:
+    - preservice-check-pe
+  hosts: ios-pe
+  connection: local
+  gather_facts: no
+  tasks:
+  - include_vars:
+         file: ./models_fabric2node/nodes.yml
+  - name: Create pre deploy service check from data model
+    template: src=./PE-templates/PE-ios-services-pre-check.j2 dest=./validate_services/{{ inventory_hostname }}_pre_check_services.yml
+
+#####################################    
+- name: Generate postdeployment check for PE services - active and absent vrf
+#####################################
+  tags:
+    - postservice-check-pe
+  hosts: ios-pe
+  connection: local
+  gather_facts: no
+  tasks:
+  - include_vars:
+         file: ./models_fabric2node/nodes.yml
+  - name: Create post deploy service check from data model
+    template: src=./PE-templates/PE-ios-services-post-check.j2 dest=./validate_services/{{ inventory_hostname }}_post_check_services.yml
+    
+
+#####################################    
+- name: Generate service validation for PE
+#####################################    
+  tags:
+    - service-validation-pe
+  hosts: ios-pe
+  connection: local
+  gather_facts: no
+  tasks:
+  - include_vars:
+         file: ./models_fabric2node/nodes.yml
+  - name: Create services model per node from node data model - for validation
+    template: src=./PE-templates/PE-ios-validate-services.j2 dest=./validate_services/{{ inventory_hostname }}_validate_services.yml

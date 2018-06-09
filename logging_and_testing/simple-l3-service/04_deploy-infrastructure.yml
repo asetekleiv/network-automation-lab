@@ -1,0 +1,77 @@
+#####################################    
+- name: Deploy infrastructure configuration for P
+#####################################
+  hosts: ios-p
+  tags:
+    - deploy-p
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ~/secure/passwords
+  tasks:
+  - name: Deploy assembled infrastructure config for IOS using NAPALM
+    napalm_install_config:
+      hostname: "{{ ansible_host }}"
+      username: "{{ ansible_ssh_user }}"
+      dev_os: "{{ ansible_device_os }}"
+      password: "{{ ansible_ssh_pass }}"
+      config_file: "./generated_config/{{inventory_hostname}}/infrastructure_assembeled/running.conf"
+      #commit_changes: "{{commit}}"
+      commit_changes: true
+      #replace_config: true
+      #diff_file: "./diff.txt"      
+    register: output  
+  - debug: var=output   
+  
+#####################################    
+- name: Deploy infrastructure configuration for PE
+#####################################
+  hosts: ios-pe
+  tags:
+    - deploy-pe
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ~/secure/passwords
+  tasks:
+  - name: Deploy assembled infrastructure config for IOS using NAPALM
+    napalm_install_config:
+      hostname: "{{ ansible_host }}"
+      username: "{{ ansible_ssh_user }}"
+      dev_os: "{{ ansible_device_os }}"
+      password: "{{ ansible_ssh_pass }}"
+      config_file: "./generated_config/{{inventory_hostname}}/infrastructure_assembeled/running.conf"
+      #commit_changes: "{{commit}}"
+      commit_changes: "{{ not ansible_check_mode }}"
+      replace_config: false
+      #diff_file: "./diff.txt"
+      get_diffs: true
+    register: output  
+  - debug: var=output 
+  
+#####################################    
+- name: Deploy infrastructure configuration for CE
+#####################################
+  hosts: ios-ce
+  tags:
+    - deploy-ce
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ~/secure/passwords
+  tasks:
+  - name: Deploy assembled infrastructure config for IOS using NAPALM
+    napalm_install_config:
+      hostname: "{{ ansible_host }}"
+      username: "{{ ansible_ssh_user }}"
+      dev_os: "{{ ansible_device_os }}"
+      password: "{{ ansible_ssh_pass }}"
+      config_file: "./generated_config/{{inventory_hostname}}/infrastructure_assembeled/running.conf"
+      #commit_changes: "{{ not ansible_check_mode}}"
+      #commit_changes: "{{commit}}"
+      commit_changes: true
+      #replace_config: true
+      #diff_file: "./diff.txt"    
+    register: output  
+  - debug: var=output
+  

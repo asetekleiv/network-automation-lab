@@ -1,0 +1,74 @@
+---
+#####################################    
+- name: Test services after deployment
+#####################################    
+  hosts: ios-pe
+  tags:
+    - test-service-pe
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ~/secure/passwords
+  tasks:
+    - pause:
+        seconds: 2
+    - block:
+      - name: "validate deployment"
+        napalm_validate:
+          hostname: "{{ ansible_host }}"
+          username: "{{ ansible_ssh_user }}"
+          dev_os: "{{ ansible_device_os }}"
+          password: "{{ ansible_ssh_pass }}"
+          validation_file: "./validate_services/{{ inventory_hostname }}_validate_services.yml"
+        register: report
+        tags: [print_action]
+      - copy: 
+          content: "{{ report }}"
+          dest: ./{{debug_output}}/{{ inventory_hostname }}_validate-services.dump    
+        when:  debug_output is defined    
+
+     
+#####################################
+- name: Report service discrepancies - VRFs configured on PE that are not listed as active_vrf
+#####################################
+  hosts: ios-pe
+  tags:
+    - report-discrepancies
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ~/secure/passwords
+  tasks:
+    - file: path=./report/{{ inventory_hostname }}_vrf_report.yml state=absent
+    - file: path=./report/{{ inventory_hostname }}_vrf_report.yml state=touch
+    - include_vars:
+            file: ./validate_services/{{ inventory_hostname }}_post_check_services.yml
+    - lineinfile:
+        dest: ./report/{{ inventory_hostname }}_vrf_report.yml
+        line:  '{{ item }}'
+      with_items:
+        - '---'
+        - 'vrf_obsolete:'
+    - name: Check and report VRF discrepancies
+      ios_command:
+        commands: show ip vrf detail | inc RD
+      register: result
+    - set_fact:
+        vrf: |
+          {{result.stdout_lines[0] |
+            map('regex_findall','^VRF\s([0-9]+)') |
+            map('join') | list }}
+    - lineinfile:
+        dest: ./report/{{ inventory_hostname }}_vrf_report.yml
+        line: "  - {{ item }}"
+      with_items: "{{ vrf }}"
+      when: "not ('{{ item }}' in '{{ active_vrf }}')"
+    - copy: 
+        content: "{{ result.stdout_lines[0] }}"
+        dest: ./{{debug_output}}/{{ inventory_hostname }}_sh_ip_vrf.dump    
+      when:  debug_output is defined     
+
+
+
+      
+   

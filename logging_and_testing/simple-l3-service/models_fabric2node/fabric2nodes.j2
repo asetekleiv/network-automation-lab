@@ -1,0 +1,38 @@
+{% macro point2point_link(port,ip,dot1q,area,link_neigbour) %}
+{{ port }}.{{dot1q}}: { ip: {{ip}}, dot1q: {{dot1q}}, area: {{area}}, neighbour: {{link_neigbour}}  }
+{% endmacro %}
+---
+#Node model
+common_attr: 
+  md5_key: {{common_attr.md5_key}}
+  asn: {{common_attr.asn}}
+  level15user: {{common_attr.level15user}}
+
+routers:
+{% for router in routers %} 
+  {{ router.name }}:
+    hostname: {{ router.name }}
+    system: {{ router.system }}
+{%  if 'P' in router.name %}
+    ospf_process: {{ common_attr.asn - 60000 }}
+{%  endif %}
+    os: {{ router.os }}
+    bgpneighbor: {{ router.bgpneighbor }}
+    mgmt: {{ router.mgmt }}
+    links:
+{%  for info in fabric_links -%}    
+{%    if info.first_router == router.name %}
+      - {{point2point_link(info.first_port,info.subnet | ipaddr('net') | ipaddr('1'), info.dot1q,info.ospf_area,info.second_router) }}
+{%    elif info.second_router == router.name %}
+      - {{point2point_link(info.second_port,info.subnet | ipaddr('net') | ipaddr('2'), info.dot1q,info.ospf_area,info.first_router) }}
+{%    endif -%}
+{%  endfor -%}
+{%  if 'PE' in router.name or 'CE' in router.name  %}
+    service:
+{%   for service in service_fabric %}
+{%     for key, value in service.items() %}
+       - {{key}}: {{value}}
+{%   endfor %}  
+{%   endfor %}  
+{% endif %}
+{% endfor -%}  

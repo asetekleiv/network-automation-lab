@@ -1,0 +1,78 @@
+---
+#####################################
+- name: Report service discrepancies - VRFs configured on PE that are not listed as active_vrf
+#####################################
+  hosts: ios-pe
+  tags:
+    - report-discrepancies
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ~/secure/passwords
+  tasks:
+    - file: path=./report/{{ inventory_hostname }}_vrf_report.yml state=absent
+    - file: path=./report/{{ inventory_hostname }}_vrf_report.yml state=touch
+    - include_vars:
+            file: ./validate_services/{{ inventory_hostname }}_post_check_services.yml
+    - lineinfile:
+        dest: ./report/{{ inventory_hostname }}_vrf_report.yml
+        line:  '{{ item }}'
+      with_items:
+        - '---'
+        - 'vrf_obsolete:'
+    - name: Check and report VRF discrepancies
+      ios_command:
+        commands: show ip vrf detail | inc RD
+      register: result
+    - set_fact:
+        vrf: |
+          {{result.stdout_lines[0] |
+            map('regex_findall','^VRF\s([0-9]+)') |
+            map('join') | list }}
+    - lineinfile:
+        dest: ./report/{{ inventory_hostname }}_vrf_report.yml
+        line: "  - {{ item }}"
+      with_items: "{{ vrf }}"
+      when: "not ('{{ item }}' in '{{ active_vrf }}')"
+
+#####################################
+- name: Cleanup VRF services listed as absent in fabricmodel
+#####################################
+  hosts: ios-pe
+  tags:
+    - cleanup-absent-services
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ~/secure/passwords
+  tasks:
+    - include_vars:
+            file: ./validate_services/{{ inventory_hostname }}_post_check_services.yml
+    - name: Delete absent VRF services
+      ios_config:
+        lines:
+          - no ip vrf {{ item }}
+      with_items: "{{ absent_vrf }}"
+      when: ({{ absent_vrf }})
+
+
+
+#####################################
+- name: Cleanup VRF services that are not in datamodel
+#####################################
+  hosts: ios-pe
+  tags:
+    - cleanup-vrf-services
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ~/secure/passwords
+  tasks:
+    - include_vars:
+            file: ./report/{{ inventory_hostname }}_vrf_report.yml
+    - name: Delete obsolete VRF services
+      ios_config:
+        lines:
+          - no ip vrf {{ item }}
+      with_items: "{{ vrf_obsolete }}"
+      when: ({{ vrf_obsolete }})

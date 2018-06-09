@@ -1,0 +1,101 @@
+---  
+#####################################
+- name: Generate  configs for P
+#####################################
+  tags:
+    - config-p
+  hosts: ios-p
+  connection: local
+  gather_facts: no
+  tasks:
+  - include_vars:
+        file: ./models_fabric2node/nodes.yml
+  
+  - name: Create admin config snippet for P
+    template: src=./P-templates/P-ios-mgmt.j2  dest=./generated_config/{{inventory_hostname}}/{{inventory_hostname}}.ios-01.mgmt.cfg
+          
+  - name: Create general config snippet for P
+    template: src=./P-templates/P-ios-general.j2  dest=./generated_config/{{inventory_hostname}}/{{inventory_hostname}}.ios-02.general.cfg
+
+  - name: Create interface config snippet for P
+    template: src=./P-templates/P-ios-interface.j2 dest=./generated_config/{{inventory_hostname}}/{{inventory_hostname}}.ios-03.interface.cfg
+
+  - name: Create router config snippet for P
+    template: src=./P-templates/P-ios-router.j2 dest=./generated_config/{{inventory_hostname}}/{{inventory_hostname}}.ios-04.router.cfg
+   
+#####################################
+  - name: Assemble infrastructure config for P 
+##################################### 
+    assemble:
+      src: "./generated_config/{{inventory_hostname}}/"
+      dest: "./generated_config/{{inventory_hostname}}/infrastructure_assembeled/running.conf"
+    changed_when: no
+    check_mode: no    
+ 
+#####################################
+- name: Generate  configs for PE
+#####################################
+  tags:
+    - config-pe
+  hosts: ios-pe
+  connection: local
+  gather_facts: no
+  tasks:
+  - include_vars:
+        file: ./models_fabric2node/nodes.yml
+  
+  - name: Create admin config snippet for PE
+    template: src=./PE-templates/PE-ios-mgmt.j2  dest=./generated_config/{{inventory_hostname}}/{{inventory_hostname}}.ios-01.mgmt.cfg
+  
+  - name: Create general config snippet for PE
+    template: src=./PE-templates/PE-ios-general.j2  dest=./generated_config/{{inventory_hostname}}/{{inventory_hostname}}.ios-02.general.cfg
+
+  - name: Create interface config snippet for PE
+    template: src=./PE-templates/PE-ios-interface.j2 dest=./generated_config/{{inventory_hostname}}/{{inventory_hostname}}.ios-03.interface.cfg
+
+  - name: Create router config snippet for PE
+    template: src=./PE-templates/PE-ios-router.j2 dest=./generated_config/{{inventory_hostname}}/{{inventory_hostname}}.ios-04.router.cfg
+
+  - name: Create services config snippet for PE
+    template: src=./PE-templates/PE-ios-services.j2 dest=./generated_config/{{inventory_hostname}}/services/{{inventory_hostname}}.ios-services.cfg 
+
+#####################################
+  - name: Assemble infrastructure config for PE 
+##################################### 
+    assemble:
+      src: "./generated_config/{{inventory_hostname}}/"
+      dest: "./generated_config/{{inventory_hostname}}/infrastructure_assembeled/running.conf"
+    changed_when: no
+    check_mode: no    
+    
+#####################################
+- name: Generate  configs for CE
+#####################################
+  tags:
+    - config-ce
+  hosts: ios-ce
+  connection: local
+  gather_facts: no
+  tasks:
+  - include_vars:
+        file: ./models_fabric2node/nodes.yml
+  
+  - name: Create admin config snippet for CE
+    template: src=./CE-templates/CE-ios-mgmt.j2  dest=./generated_config/{{inventory_hostname}}/{{inventory_hostname}}.ios-01.mgmt.cfg
+          
+  - name: Create general config snippet for CE
+    template: src=./CE-templates/CE-ios-general.j2  dest=./generated_config/{{inventory_hostname}}/{{inventory_hostname}}.ios-02.general.cfg
+
+  - name: Create interface config snippet for CE
+    template: src=./CE-templates/CE-ios-interface.j2 dest=./generated_config/{{inventory_hostname}}/{{inventory_hostname}}.ios-03.interface.cfg
+
+  - name: Create router config snippet for CE
+    template: src=./CE-templates/CE-ios-router.j2 dest=./generated_config/{{inventory_hostname}}/{{inventory_hostname}}.ios-04.router.cfg 
+#####################################
+  - name: Assemble infrastructure config for CE 
+##################################### 
+    assemble:
+      src: "./generated_config/{{inventory_hostname}}/"
+      dest: "./generated_config/{{inventory_hostname}}/infrastructure_assembeled/running.conf"
+    changed_when: no
+    check_mode: no        

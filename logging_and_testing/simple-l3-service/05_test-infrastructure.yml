@@ -1,0 +1,62 @@
+---
+#####################################    
+- name: Generate validation files for PE
+#####################################    
+  hosts: ios-pe
+  tags:
+    - validatefiles-pe
+  connection: local
+  gather_facts: false
+
+  tasks:
+  - include_vars:
+      file: ./models_fabric2node/nodes.yml
+  - name: Create bgp validation files for PE
+    template: src=./PE-templates/PE-ios-validate-bgp.j2 dest=./validate_infrastructure/{{inventory_hostname}}_validate_bgp.yml       
+#####################################    
+- name: Get infrastructure facts from PE
+#####################################    
+  hosts: ios-pe
+  tags:
+    - facts-pe
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ~/secure/passwords
+  tasks:
+  - name: Get facts
+    napalm_get_facts:
+      hostname: "{{ ansible_host }}"
+      username: "{{ ansible_ssh_user }}"
+      dev_os: "{{ ansible_device_os }}"
+      password: "{{ ansible_ssh_pass }}"
+      filter:
+        - lldp_neighbors
+        - bgp_neighbors
+        - interfaces_ip
+        - interfaces
+        
+#####################################    
+- name: Test infrastructure deployment for PE
+#####################################  
+  hosts: ios-pe
+  tags:
+    - test-pe
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ~/secure/passwords
+  tasks:
+    - pause:
+        seconds: 2
+    - block:
+      - name: "validate deployment"
+        napalm_validate:
+          hostname: "{{ ansible_host }}"
+          username: "{{ ansible_ssh_user }}"
+          dev_os: "{{ ansible_device_os }}"
+          password: "{{ ansible_ssh_pass }}"
+          validation_file: "./validate_infrastructure/{{ inventory_hostname }}_validate_{{ item }}.yml"
+        register: report
+        tags: [print_action]
+        with_items: ["bgp"]     

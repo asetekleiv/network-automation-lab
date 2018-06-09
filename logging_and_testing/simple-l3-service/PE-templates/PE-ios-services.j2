@@ -1,0 +1,36 @@
+{% set router = routers[inventory_hostname] %}
+{% set router_bgpneighbor = routers[inventory_hostname]['bgpneighbor'] %}
+{% set router_bgpneighbor_system = routers[router_bgpneighbor]['system'] %}
+!
+{% if router.service is defined %}
+{% for service in router.service %}
+{% for key, value in service.items() %}
+ip vrf {{value.vrf}}
+ rd {{common_attr.asn}}:{{value.vrf}}
+ route-target export {{common_attr.asn}}:{{value.vrf}}
+ route-target import {{common_attr.asn}}:{{value.vrf}}
+!
+router bgp {{common_attr.asn}}
+!
+ address-family ipv4 vrf {{value.vrf}}
+  redistribute connected
+ exit-address-family
+!
+{% endfor %}
+{% endfor %}
+{% endif %}
+!
+{% if router.links is defined -%}
+{%  for links in router.links -%}
+{%    for key, value in links.items() -%}
+{% if 'CE' in value.neighbour %}
+interface {{key}}
+  description to-{{value.neighbour}}
+  encapsulation dot1Q {{value.dot1q}}
+  ip vrf forwarding {{value.dot1q}}
+  ip address {{value.ip | ipaddr('address')}} {{value.ip | ipaddr('netmask')}}
+{% endif %}
+!  
+{%    endfor -%}
+{%  endfor -%}
+{% endif -%}  

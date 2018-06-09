@@ -1,0 +1,1 @@
+{"changed": false, "failed": false, "compliance_report": {"skipped": [], "get_interfaces_ip": {"complies": true, "missing": [], "present": {"GigabitEthernet3.1001": {"nested": true, "complies": true}}, "extra": []}, "get_facts": {"complies": true, "missing": [], "present": {"hostname": {"nested": false, "complies": true}}, "extra": []}, "complies": true}}
