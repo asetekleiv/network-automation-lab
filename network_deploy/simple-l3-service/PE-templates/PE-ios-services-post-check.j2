@@ -1,0 +1,26 @@
+---
+{% set router = routers[inventory_hostname] %}
+{% macro active_vrf_tag(stag) %}
+active_vrf:
+  - {{ stag }}
+{% endmacro %}  
+{% macro absent_vrf_tag(stag) %}
+absent_vrf:
+  - {{ stag }}
+{% endmacro %}  
+{% if router.service is defined %}
+{%   for info in router.service %}
+{%     for key, value in info.items() %}
+{%       if "active" in value.state %}
+{{ active_vrf_tag(value.vrf) }}
+{%       endif %}
+{%       if "absent" in value.state %}
+{{ absent_vrf_tag(value.vrf) }}
+{%       endif %}
+{%     endfor %}
+{%   endfor %}
+{% endif %}
+
+
+
+

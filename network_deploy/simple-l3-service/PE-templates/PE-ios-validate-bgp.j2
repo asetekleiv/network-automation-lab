@@ -1,0 +1,13 @@
+---
+{% set router = routers[inventory_hostname] %}
+{% set router_bgpneighbor = routers[inventory_hostname]['bgpneighbor'] %}
+{% set router_bgpneighbor_system = routers[router_bgpneighbor]['system'] %}
+- get_bgp_neighbors:
+    global:
+      router_id: {{router.system}}
+      peers:
+        _mode: strict
+        {{router_bgpneighbor_system}}:
+          is_up: true
+
+

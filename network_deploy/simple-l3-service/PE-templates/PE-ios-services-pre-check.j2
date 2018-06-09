@@ -1,0 +1,17 @@
+---
+{% set router = routers[inventory_hostname] %}
+
+{% if router.service is defined %}
+active_interfaces:
+{%   for info in router.service %}
+{%     for key, value in info.items() %}
+{%       if "active" in value.state %}
+  - GigabitEthernet3.{{value.vrf}}
+{%       endif %}
+{%     endfor %}
+{%   endfor %}
+{% endif %}
+
+
+
+

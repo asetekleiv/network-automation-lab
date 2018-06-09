@@ -1,0 +1,12 @@
+---
+- import_playbook: 01_create_config_env.yml
+- import_playbook: 02_fabric2node.yml
+- import_playbook: 03_generate-config.yml
+- import_playbook: 04_deploy-infrastructure.yml
+- import_playbook: 05_test-infrastructure.yml
+- import_playbook: 06_create-service-validation.yml
+- import_playbook: 07_services-pretest.yml
+- import_playbook: 08_services-deploy.yml
+- import_playbook: 09_services-validation.yml
+- import_playbook: 10_services-discrepancies_cleanup.yml
+

@@ -1,0 +1,55 @@
+---
+common_attr:
+  asn: 65535
+  md5_key: test
+  level15user: jalla
+
+routers:
+  - name: PE-1
+    system: 10.0.10.1
+    os: ios
+    bgpneighbor: PE-2
+    mgmt: 192.168.21.231
+  - name: PE-2
+    system: 10.0.10.2
+    os: ios
+    bgpneighbor: PE-1
+    mgmt: 192.168.21.232
+  - name: P-1
+    system: 10.0.10.10
+    os: ios 
+    bgpneighbor: NA
+    mgmt: 192.168.21.233
+  - name: CE-1
+    system: NA
+    os: ios  
+    bgpneighbor: NA
+    mgmt: 192.168.21.235
+  - name: CE-2
+    system: NA
+    os: ios
+    bgpneighbor: NA
+    mgmt: 192.168.21.236
+  
+  
+fabric_links:
+  #Link between PE-1 and CE-1
+  - {second_router: CE-1, second_port: GigabitEthernet3, 
+    first_router: PE-1, first_port: GigabitEthernet3,
+  dot1q: 1001, subnet: 192.168.1.0/30, ospf_area: NA }
+  #Link between P-1 and PE-1 
+  - {second_router: PE-1, second_port: GigabitEthernet2, 
+    first_router: P-1, first_port: GigabitEthernet2,
+  dot1q: 200, subnet: 172.16.1.0/30, ospf_area: 0 }
+  #Link between P-1 and PE-2  
+  - {first_router: P-1,  first_port: GigabitEthernet3, 
+    second_router: PE-2, second_port: GigabitEthernet2,
+  dot1q: 300, subnet: 172.16.2.0/30, ospf_area: 0  }
+  #Link between PE-2 and CE-2 
+  - {first_router: PE-2, first_port: GigabitEthernet3, 
+    second_router: CE-2, second_port: GigabitEthernet3,
+  dot1q: 1001, subnet: 192.168.2.0/30, ospf_area: NA }
+
+service_fabric: 
+  - 1001: {vrf: 1001,PE: [PE-1,PE-2],CE: [CE-1,CE-2],type: l3vpn, state: active}
+  - 1002: {vrf: 1002,PE: [PE-1,PE-2],CE: [CE-1,CE-2],type: l3vpn, state: absent}

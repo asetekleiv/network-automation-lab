@@ -1,0 +1,26 @@
+---
+- get_facts:
+    hostname: PE-1
+
+- get_interfaces_ip:
+ 
+    GigabitEthernet3.1001:
+      ipv4:
+        192.168.1.1:
+          prefix_length: 30
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

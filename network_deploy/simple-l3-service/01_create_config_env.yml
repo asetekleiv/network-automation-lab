@@ -1,0 +1,50 @@
+---
+###################################
+- name: Create config environment
+###################################
+  tags:
+    - config-env
+  hosts: all
+  connection: local
+  gather_facts: no
+  vars:
+    generated_config: generated_config
+  tasks:
+    - name: Create config directory on local file system
+      local_action: file path={{generated_config}} state=directory
+      changed_when: no
+      check_mode: no 
+      run_once: true
+      
+    - name: Create report directory on local file system
+      local_action: file path=./report state=directory
+      changed_when: no
+      check_mode: no 
+      run_once: true 
+      
+    - name: Create infrastructure validation directory on local file system
+      local_action: file path=./validate_infrastructure state=directory
+      changed_when: no
+      check_mode: no 
+      run_once: true  
+      
+    - name: Create service validation directory on local file system
+      local_action: file path=./validate_services state=directory
+      changed_when: no
+      check_mode: no 
+      run_once: true       
+      
+    - name: Create config directory per router
+      local_action: file path={{generated_config}}/{{inventory_hostname}} state=directory
+      changed_when: no
+      check_mode: no 
+
+    - name: Create config dir per router for service_config
+      local_action: file path={{generated_config}}/{{inventory_hostname}}/services state=directory
+      changed_when: no
+      check_mode: no 
+      
+    - name: Create temp config directory per router for assembeled infrastructure config
+      local_action: file path={{generated_config}}/{{inventory_hostname}}/infrastructure_assembeled state=directory
+      changed_when: no
+      check_mode: no   

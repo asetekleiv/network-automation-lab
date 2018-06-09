@@ -1,0 +1,20 @@
+---
+#####################################  
+- name: Check if active interfaces exists on PE before deploying
+#####################################  
+  hosts: ios-pe
+  tags:
+    - check-services-before-deploy
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ~/secure/passwords
+  tasks:
+    - include_vars:
+           file: ./validate_services/{{ inventory_hostname }}_pre_check_services.yml
+    - name: Check interfaces not provisioned
+      ios_command:
+        commands: show ip interface brief
+      register: result
+      failed_when: "(item in result.stdout[0])"
+      with_items: "{{ active_interfaces }}"

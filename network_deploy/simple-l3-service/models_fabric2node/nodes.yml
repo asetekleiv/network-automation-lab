@@ -1,0 +1,91 @@
+---
+#Node model
+common_attr: 
+  md5_key: test
+  asn: 65535
+  level15user: jalla
+
+routers:
+ 
+  PE-1:
+    hostname: PE-1
+    system: 10.0.10.1
+    ospf_process: 5535
+    os: ios
+    bgpneighbor: PE-2
+    mgmt: 192.168.21.231
+    links:
+      - GigabitEthernet3.1001: { ip: 192.168.1.1/30, dot1q: 1001, area: NA, neighbour: CE-1  }
+
+      - GigabitEthernet2.200: { ip: 172.16.1.2/30, dot1q: 200, area: 0, neighbour: P-1  }
+
+    service:
+       - 1001: {'CE': ['CE-1', 'CE-2'], 'type': 'l3vpn', 'state': 'active', 'PE': ['PE-1', 'PE-2'], 'vrf': 1001}
+  
+       - 1002: {'CE': ['CE-1', 'CE-2'], 'type': 'l3vpn', 'state': 'absent', 'PE': ['PE-1', 'PE-2'], 'vrf': 1002}
+  
+  
+ 
+  PE-2:
+    hostname: PE-2
+    system: 10.0.10.2
+    ospf_process: 5535
+    os: ios
+    bgpneighbor: PE-1
+    mgmt: 192.168.21.232
+    links:
+      - GigabitEthernet2.300: { ip: 172.16.2.2/30, dot1q: 300, area: 0, neighbour: P-1  }
+
+      - GigabitEthernet3.1001: { ip: 192.168.2.1/30, dot1q: 1001, area: NA, neighbour: CE-2  }
+
+    service:
+       - 1001: {'CE': ['CE-1', 'CE-2'], 'type': 'l3vpn', 'state': 'active', 'PE': ['PE-1', 'PE-2'], 'vrf': 1001}
+  
+       - 1002: {'CE': ['CE-1', 'CE-2'], 'type': 'l3vpn', 'state': 'absent', 'PE': ['PE-1', 'PE-2'], 'vrf': 1002}
+  
+  
+ 
+  P-1:
+    hostname: P-1
+    system: 10.0.10.10
+    ospf_process: 5535
+    os: ios
+    bgpneighbor: NA
+    mgmt: 192.168.21.233
+    links:
+      - GigabitEthernet2.200: { ip: 172.16.1.1/30, dot1q: 200, area: 0, neighbour: PE-1  }
+
+      - GigabitEthernet3.300: { ip: 172.16.2.1/30, dot1q: 300, area: 0, neighbour: PE-2  }
+
+ 
+  CE-1:
+    hostname: CE-1
+    system: NA
+    os: ios
+    bgpneighbor: NA
+    mgmt: 192.168.21.235
+    links:
+      - GigabitEthernet3.1001: { ip: 192.168.1.2/30, dot1q: 1001, area: NA, neighbour: PE-1  }
+
+    service:
+       - 1001: {'CE': ['CE-1', 'CE-2'], 'type': 'l3vpn', 'state': 'active', 'PE': ['PE-1', 'PE-2'], 'vrf': 1001}
+  
+       - 1002: {'CE': ['CE-1', 'CE-2'], 'type': 'l3vpn', 'state': 'absent', 'PE': ['PE-1', 'PE-2'], 'vrf': 1002}
+  
+  
+ 
+  CE-2:
+    hostname: CE-2
+    system: NA
+    os: ios
+    bgpneighbor: NA
+    mgmt: 192.168.21.236
+    links:
+      - GigabitEthernet3.1001: { ip: 192.168.2.2/30, dot1q: 1001, area: NA, neighbour: PE-2  }
+
+    service:
+       - 1001: {'CE': ['CE-1', 'CE-2'], 'type': 'l3vpn', 'state': 'active', 'PE': ['PE-1', 'PE-2'], 'vrf': 1001}
+  
+       - 1002: {'CE': ['CE-1', 'CE-2'], 'type': 'l3vpn', 'state': 'absent', 'PE': ['PE-1', 'PE-2'], 'vrf': 1002}
+  
+  

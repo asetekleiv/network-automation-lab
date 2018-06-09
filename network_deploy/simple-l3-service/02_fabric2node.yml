@@ -1,0 +1,13 @@
+---  
+###################################
+- name: Transform fabric data model
+###################################
+  tags:
+    - fabric2node
+  hosts: localhost
+  gather_facts: no
+  tasks:
+  - include_vars:
+      file: ./models_fabric2node/fabric.yml
+  - name: Create per-node data model from fabric data model
+    template: src=./models_fabric2node/fabric2nodes.j2 dest=./models_fabric2node/nodes.yml
