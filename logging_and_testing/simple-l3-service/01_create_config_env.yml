@@ -38,7 +38,13 @@
       local_action: file path=./log_debug_output state=directory
       changed_when: no
       check_mode: no 
-      run_once: true 
+      run_once: true      
+      
+    - name: Create unit_testing output directory on local file system
+      local_action: file path=./unit_testing_output state=directory
+      changed_when: no
+      check_mode: no 
+      run_once: true       
       
     - name: Create config directory per router
       local_action: file path={{generated_config}}/{{inventory_hostname}} state=directory

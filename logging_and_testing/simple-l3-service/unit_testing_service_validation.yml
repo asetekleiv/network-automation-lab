@@ -1,0 +1,87 @@
+---
+#####################################
+- name: Create service validation from per node model input
+#####################################
+  tags:
+    - test-correct-input
+  hosts: ios-pe
+  connection: local
+  gather_facts: no
+  tasks:
+  - include_vars:
+        file: ./models_fabric2node/nodes.yml
+  - name: Create a list used for Data input validation
+    template: src=./unit_testing/ios-pe-service_validation_correct_input.j2 dest=./unit_testing/{{inventory_hostname}}_service_validation_expectcorrect.yml
+
+#####################################
+- name: Create service validation from per node model input - added wrong subinterface on nodes for testing (.999)
+#####################################
+  tags:
+    - test-wrong-input
+  hosts: ios-pe
+  connection: local
+  gather_facts: no
+  tasks:
+  - include_vars:
+        file: ./models_fabric2node/nodes.yml
+  - name: Create a list used for Data input validation
+    template: src=./unit_testing/ios-pe-service_validation_wrong_input.j2 dest=./unit_testing/{{inventory_hostname}}_service_validation_expectwrong.yml
+
+#####################################    
+- name: Test service-validation with expected correct input data
+#####################################    
+  hosts: ios-pe
+  tags:
+    - service-correctinput
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ~/secure/passwords
+  tasks:
+    - pause:
+        seconds: 2
+    - block:
+      - name: "validate deployment"
+        napalm_validate:
+          hostname: "{{ ansible_host }}"
+          username: "{{ ansible_ssh_user }}"
+          dev_os: "{{ ansible_device_os }}"
+          password: "{{ ansible_ssh_pass }}"
+          validation_file: "./unit_testing/{{ inventory_hostname }}_service_validation_expectcorrect.yml"
+        register: report_expect_correct
+        tags: [print_action]
+      #will not write content to file if validation failed
+      - copy: 
+          content: "{{ report_expect_correct }}"
+          dest: ./unit_testing_output/{{ inventory_hostname }}_service_validation_expectcorrect.dump    
+         
+    
+#####################################    
+- name: Test service-validation with expected wrong input data
+#####################################    
+  hosts: ios-pe
+  tags:
+    - service-wronginput
+  gather_facts: false
+  connection: local
+  vars_files:
+    - ~/secure/passwords
+  tasks:
+    - pause:
+        seconds: 2
+    - block:
+      - name: "validate deployment"
+        napalm_validate:
+          hostname: "{{ ansible_host }}"
+          username: "{{ ansible_ssh_user }}"
+          dev_os: "{{ ansible_device_os }}"
+          password: "{{ ansible_ssh_pass }}"
+          validation_file: "./unit_testing/{{ inventory_hostname }}_service_validation_expectwrong.yml"
+        register: report_expect_wrong
+        tags: [print_action]
+      #will not write content to file if validation failed
+      - copy: 
+          content: "{{ report_expect_wrong }}"
+          dest: ./unit_testing_output/{{ inventory_hostname }}_service_validation_expectwrong.dump    
+   
+    

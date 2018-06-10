@@ -1,0 +1,27 @@
+---
+{% set router = routers[inventory_hostname] %}
+- get_facts:
+    hostname: {{ router.hostname }}
+
+- get_interfaces_ip:
+{% macro validate_service_config(port,ip1) %}
+    {{ port }}:
+      ipv4:
+        {{ ip1 }}:
+          prefix_length: 30
+{% endmacro %}
+{% if router.service is defined %}
+{%   for service in router.service %}
+{%     for key01, value01 in service.items() %}
+{%       if "active" in value01.state %} 
+{%         for link in router.links %}
+{%           for key02, value02 in link.items() %}
+{%             if key01 == value02.dot1q %}
+{{validate_service_config(key02 | regex_replace('\.\d*','.999'),value02.ip | ipaddr('address')) }}
+{%             endif %}
+{%           endfor %}
+{%         endfor %}
+{%       endif %}
+{%     endfor %}
+{%   endfor %}
+{% endif %}
