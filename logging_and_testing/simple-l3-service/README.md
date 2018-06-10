@@ -18,7 +18,6 @@ This playbook is a copy of network_deploy playbook, but also includes logging an
 </li>
 </ol> 
 <br>
-<br>
 <b>Playbooks for network_deploy:</b>
 <ol style="list-style-type:circle">
   <li>00_generate_build_deploy_check.yml - complete playbook </li>
